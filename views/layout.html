@@ -1,0 +1,16 @@
+<html>
+<head>
+  <title>{% block title %}Blog{% endblock %}</title>
+
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+  <section id="content">
+    {% block content %}
+      <p>Missing content!</p>
+    {% endblock %}
+  </section>
+
+  <script src="/primus/primus.js"></script>
+</body>
+</html>

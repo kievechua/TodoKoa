@@ -1,0 +1,5 @@
+views/*
+.tmp/*
+.git/*
+assets
+node_modules
