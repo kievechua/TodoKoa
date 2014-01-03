@@ -14,4 +14,38 @@
       </li>
     {% endfor %}
   </ul>
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Primus</h1>
+      <p class="lead">
+        This Primus example allows you to experiment with the API's and see how
+        all components interact with each other.
+      </p>
+
+      <p>
+        <a href="#" id="connect" class="btn btn-outline-inverse btn-lg">
+          connect
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <div id="output">
+  </div>
+
+  <form id="action" action="#action" class="form-inline" role="form">
+    <div class="col-md-11">
+      <input type="text" class="form-control" placeholder="{ echo: 'foo' }" id="data" />
+      <span class="help-block">
+        Sending <code>"end"</code> will close the connection, <code>{ echo: "data" }</code>
+        will respond with the data you're sending and <code>{ pipe: true }</code>
+        sends the whole html file using the `.pipe` method. Or if you just want to see the
+        reconnect in action, issue a <code>"kill"</code> command to nuke the server.
+      </span>
+    </div>
+    <div class="col-md-1">
+      <button type="submit" class="btn btn-default btn-block">Submit</button>
+    </div>
+  </form>
 {% endblock %}

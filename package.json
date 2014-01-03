@@ -16,7 +16,8 @@
     "koa-compress": "~1.0.0",
     "koa-response-time": "~1.0.1",
     "primus": "~1.5.1",
-    "ws": "~0.4.31"
+    "ws": "~0.4.31",
+    "argh": "~0.1.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

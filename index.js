@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 
+var argh = require('argh');
 var render = require('./lib/render');
 var logger = require('koa-logger');
 // var route = require('koa-route');
@@ -17,27 +18,53 @@ var app = koa();
 var Primus = require('primus');
 
 require('koa-trie-router')(app);
+//
+// Now that we've setup our basic server, we can setup our Primus server.
+//
+var server = require('http').Server(app.callback());
+var primus = new Primus(server, { transformer: 'websockets', parser: 'JSON' });
 
-var primus = new Primus(app, {/* options */});
 primus.on('connection', function (spark) {
-  console.log('connection has the following headers', spark.headers);
-  console.log('connection was made from', spark.address);
-  console.log('connection id', spark.id);
+  console.log('new connection');
 
-  spark.on('data', function (data) {
-    console.log('received data from the client', data);
+  spark.on('data', function data(packet) {
+    console.log('incoming:', packet);
 
     //
-    // Always close the connection if we didn't receive our secret imaginary
-    // handshake.
+    // Close the connection.
     //
-    if ('foo' !== data.secrethandshake) spark.end();
-    spark.write({ foo: 'bar' });
-    spark.write('banana');
+    if (packet === 'end') spark.end();
+
+    //
+    // Echo the responses.
+    //
+    if (packet.echo) spark.write(packet.echo);
+
+    //
+    // Pipe in some data.
+    //
+    if (packet.pipe) fs.createReadStream(__dirname + '/index.html').pipe(spark, {
+      end: false
+    });
+
+    //
+    // Major server kill;
+    //
+    if (packet !== 'kill') return;
+
+    primus.write('Spark: '+spark.id +' asked for a full server kill. Server will be killed within 5 seconds');
+    setTimeout(process.exit, 5000);
   });
-
-  spark.write('Hello world');
 });
+
+primus.library();
+
+//
+// Save the compiled file to the hard disk so it can also be distributed over
+// cdn's or just be served by something else than the build-in path.
+//
+primus.save('app/scripts/primus.js');
+
 
 // "database"
 
@@ -109,4 +136,4 @@ function *create() {
 // listen
 
 app.listen(3000);
-console.log('listening on port 3000');
+console.log('listening on port ' + 3000);
